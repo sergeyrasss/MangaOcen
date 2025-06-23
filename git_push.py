@@ -1,30 +1,33 @@
 import os
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
-# Путь к папке с главами (sorted_chapters)
-CHAPTERS_DIR = "/home/den/MangaOcen/GrandBlue/sorted_chapters"
+# Настройки
+REPO_ROOT = "/home/den/MangaOcen"
+CHAPTERS_DIR = os.path.join(REPO_ROOT, "GrandBlue", "sorted_chapters")
 
-# Переходим в корень репозитория (где .git)
-os.chdir("/home/den/MangaOcen")
+# Переходим в корень репозитория
+os.chdir(REPO_ROOT)
 
-# Получаем список папок глав (сортированный)
+# Получаем отсортированный список глав (с поддержкой дробных номеров)
 chapters = sorted(
     [d for d in os.listdir(CHAPTERS_DIR) if d.startswith("Chapter_")],
-    key=lambda x: float(x.split("_")[1])  # Используем float вместо int!
+    key=lambda x: float(x.split("_")[1])
 )
 
-# Для каждой главы:
 for chapter in chapters:
-    # 1. Добавляем только эту папку
-    subprocess.run(["git", "add", f"sorted_chapters/{chapter}"])
+    chapter_path = os.path.join("GrandBlue", "sorted_chapters", chapter)
     
-    # 2. Коммитим
-    subprocess.run(["git", "commit", "-m", f"Добавлена {chapter}"])
+    # Добавляем только эту папку главы
+    subprocess.run(["git", "add", chapter_path])
     
-    # 3. Пушим
-    subprocess.run(["git", "push", "origin", "main"])
-    
-    print(f"Успешно: {chapter} отправлена на GitHub!")
+    # Проверяем, есть ли изменения для коммита
+    status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+    if chapter_path in status.stdout:
+        subprocess.run(["git", "commit", "-m", f"Добавлена {chapter}"])
+        subprocess.run(["git", "push", "origin", "main"])
+        print(f"Успешно: {chapter} добавлена и отправлена!")
+    else:
+        print(f"Нет изменений в {chapter}, пропускаем")
 
-print("Все главы загружены!")
+print("\nВсе главы обработаны!")

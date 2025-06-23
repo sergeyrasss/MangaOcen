@@ -11,7 +11,7 @@ os.chdir("/home/den/MangaOcen")
 # Получаем список папок глав (сортированный)
 chapters = sorted(
     [d for d in os.listdir(CHAPTERS_DIR) if d.startswith("Chapter_")],
-    key=lambda x: int(x.split("_")[1])
+    key=lambda x: float(x.split("_")[1])  # Используем float вместо int!
 )
 
 # Для каждой главы:
