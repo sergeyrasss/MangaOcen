@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaVerse - Главная</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: white;
+        }
+        
+        .header {
+            background-color: #FF6B00;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .manga-cover {
+            width: 200px;
+            height: 300px;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .read-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: #FF6B00;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        
+        .read-button:hover {
+            background-color: #E55C00;
+        }
+        
+        @media (max-width: 480px) {
+            .manga-cover {
+                width: 180px;
+                height: 270px;
+            }
+            
+            .read-button {
+                padding: 12px 35px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>MangaVerse</h1>
+    </div>
+    
+    <div class="content">
+        <img class="manga-cover" 
+             src="https://images.weserv.nl/?url=img4.desu.city/manga/rus/grand_blue/vol01_ch001/grand_blue_vol01_ch001_p001.jpg" 
+             alt="Grand Blue Cover">
+        <a href="GrandBlue/chapter_001.html" class="read-button">ЧИТАТЬ</a>
+    </div>
+</body>
+</html>
