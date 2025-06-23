@@ -1,0 +1,30 @@
+import os
+from pathlib import Path
+import subprocess
+
+# Путь к папке с главами (sorted_chapters)
+CHAPTERS_DIR = "/home/den/MangaOcen/GrandBlue/sorted_chapters"
+
+# Переходим в корень репозитория (где .git)
+os.chdir("/home/den/MangaOcen")
+
+# Получаем список папок глав (сортированный)
+chapters = sorted(
+    [d for d in os.listdir(CHAPTERS_DIR) if d.startswith("Chapter_")],
+    key=lambda x: int(x.split("_")[1])
+)
+
+# Для каждой главы:
+for chapter in chapters:
+    # 1. Добавляем только эту папку
+    subprocess.run(["git", "add", f"sorted_chapters/{chapter}"])
+    
+    # 2. Коммитим
+    subprocess.run(["git", "commit", "-m", f"Добавлена {chapter}"])
+    
+    # 3. Пушим
+    subprocess.run(["git", "push", "origin", "main"])
+    
+    print(f"Успешно: {chapter} отправлена на GitHub!")
+
+print("Все главы загружены!")
