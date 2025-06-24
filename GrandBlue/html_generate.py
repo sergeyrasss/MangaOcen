@@ -37,18 +37,18 @@ for chapter_dir in sorted(os.listdir(SORTED_MANGA_DIR), key=lambda x: float(pars
     if pages:
         chapters.append((chapter_num, chapter_dir, sorted(pages, key=lambda x: x[0])))
 
-# HTML шаблон с фиксированной навигацией
+# HTML шаблон с навигацией в конце страницы
 HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{manga_title} - Глава {chapter_num}</title>
     <style type="text/css">
         body {{
             margin: 0;
-            padding: 0 0 100px 0;
-            background-color: #000000;
+            padding: 0;
+            background-color: #000;
             -webkit-text-size-adjust: none;
         }}
         .page-container {{
@@ -64,14 +64,10 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
             margin: 0 auto;
         }}
         .nav-container {{
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #000000;
-            padding: 10px;
+            width: 100%;
+            background-color: #000;
+            padding: 15px 10px;
             text-align: center;
-            z-index: 1000;
             border-top: 1px solid #333;
         }}
         .nav-inner {{
@@ -83,12 +79,10 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
             height: 40px;
             margin-bottom: 10px;
             font-size: 16px;
-            background-color: #333333;
-            color: #FFFFFF;
-            border: 1px solid #666666;
+            background-color: #333;
+            color: #FFF;
+            border: 1px solid #666;
             -webkit-appearance: menulist;
-            -webkit-border-radius: 5px;
-            border-radius: 5px;
         }}
         a.button {{
             display: block;
@@ -97,11 +91,10 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
             line-height: 40px;
             font-size: 16px;
             background-color: #FF6B00;
-            color: #FFFFFF;
+            color: #FFF;
             text-decoration: none;
             font-weight: bold;
-            -webkit-border-radius: 5px;
-            border-radius: 5px;
+            text-align: center;
         }}
     </style>
 </head>
@@ -110,7 +103,7 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
     
     <div class="nav-container">
         <div class="nav-inner">
-            <select name="chapter" onchange="window.location=this.options[this.selectedIndex].value">
+            <select onchange="window.location.href=this.value;">
                 <option value="">Выберите главу...</option>
                 {chapters_options}
             </select>

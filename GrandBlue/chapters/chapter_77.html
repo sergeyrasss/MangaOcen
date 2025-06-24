@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grand Blue - Глава 77</title>
     <style type="text/css">
         body {
             margin: 0;
-            padding: 0 0 100px 0;
-            background-color: #000000;
+            padding: 0;
+            background-color: #000;
             -webkit-text-size-adjust: none;
         }
         .page-container {
@@ -24,14 +24,10 @@
             margin: 0 auto;
         }
         .nav-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #000000;
-            padding: 10px;
+            width: 100%;
+            background-color: #000;
+            padding: 15px 10px;
             text-align: center;
-            z-index: 1000;
             border-top: 1px solid #333;
         }
         .nav-inner {
@@ -43,12 +39,10 @@
             height: 40px;
             margin-bottom: 10px;
             font-size: 16px;
-            background-color: #333333;
-            color: #FFFFFF;
-            border: 1px solid #666666;
+            background-color: #333;
+            color: #FFF;
+            border: 1px solid #666;
             -webkit-appearance: menulist;
-            -webkit-border-radius: 5px;
-            border-radius: 5px;
         }
         a.button {
             display: block;
@@ -57,11 +51,10 @@
             line-height: 40px;
             font-size: 16px;
             background-color: #FF6B00;
-            color: #FFFFFF;
+            color: #FFF;
             text-decoration: none;
             font-weight: bold;
-            -webkit-border-radius: 5px;
-            border-radius: 5px;
+            text-align: center;
         }
     </style>
 </head>
@@ -105,7 +98,7 @@
     
     <div class="nav-container">
         <div class="nav-inner">
-            <select name="chapter" onchange="window.location=this.options[this.selectedIndex].value">
+            <select onchange="window.location.href=this.value;">
                 <option value="">Выберите главу...</option>
                 <option value="chapter_1.html" >Глава 1</option>
 <option value="chapter_2.html" >Глава 2</option>
