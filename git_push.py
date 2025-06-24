@@ -1,95 +1,56 @@
 import os
 import subprocess
-import time
-from pathlib import Path
 
-# Настройки
-REPO_ROOT = "/home/den/MangaOcen"
-IMAGES_DIR = os.path.join(REPO_ROOT, "GrandBlue", "downloaded_images")
-BATCH_SIZE = 30  # Количество файлов в одном коммите
-DELAY = 10  # Задержка между операциями в секундах
-
-def run_command(cmd):
-    """Выполняет команду с обработкой ошибок"""
-    try:
-        result = subprocess.run(
-            cmd,
-            cwd=REPO_ROOT,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=True
-        )
-        return True, result.stdout
-    except subprocess.CalledProcessError as e:
-        return False, e.stderr
-
-def process_batch(batch_files, batch_num):
-    """Обрабатывает пакет файлов"""
-    print(f"\nОбработка пакета {batch_num} ({len(batch_files)} файлов)")
+def git_operations_for_directory(directory, start_from_file=None):
+    os.chdir(directory)
     
-    # Добавляем файлы
-    added_count = 0
-    for file in batch_files:
-        success, output = run_command(["git", "add", file])
-        if success:
-            added_count += 1
-        else:
-            print(f"Ошибка добавления {file}: {output}")
+    # Получаем список файлов, исключая скрытые
+    files = sorted([f for f in os.listdir() if os.path.isfile(f) and not f.startswith('.')])
     
-    if added_count == 0:
-        return False
-    
-    # Коммит
-    commit_msg = f"Добавлено {added_count} изображений (пакет {batch_num})"
-    success, output = run_command(["git", "commit", "-m", commit_msg])
-    if not success:
-        print(f"Ошибка коммита: {output}")
-        run_command(["git", "reset"])
-        return False
-    
-    # Push
-    for attempt in range(3):
-        success, output = run_command(["git", "push", "origin", "main"])
-        if success:
-            return True
-        print(f"Ошибка push (попытка {attempt+1}): {output}")
-        if attempt < 2:
-            print(f"Повтор через {DELAY} сек...")
-            time.sleep(DELAY)
-    return False
-
-def main():
-    os.chdir(REPO_ROOT)
-    
-    # Получаем список всех изображений
-    image_files = []
-    for ext in ['.jpg', '.jpeg', '.png', '.webp']:
-        image_files.extend([
-            os.path.join("GrandBlue", "downloaded_images", f) 
-            for f in os.listdir(IMAGES_DIR) 
-            if f.lower().endswith(ext)
-        ])
-    
-    if not image_files:
-        print("Не найдено изображений для обработки!")
+    if not files:
+        print("Нет файлов для добавления.")
         return
     
-    image_files.sort()
-    print(f"Найдено {len(image_files)} изображений")
+    # Определяем, с какого файла начать
+    if start_from_file:
+        try:
+            start_index = files.index(start_from_file)
+        except ValueError:
+            print(f"Файл '{start_from_file}' не найден. Начинаем с первого.")
+            start_index = 0
+    else:
+        start_index = 0
     
-    # Разбиваем на пакеты
-    batches = [image_files[i:i+BATCH_SIZE] for i in range(0, len(image_files), BATCH_SIZE)]
-    
-    # Обрабатываем каждый пакет
-    success_count = 0
-    for i, batch in enumerate(batches, 1):
-        if process_batch(batch, i):
-            success_count += 1
-        time.sleep(DELAY)
-    
-    print(f"\nУспешно обработано пакетов: {success_count}/{len(batches)}")
-    print(f"Всего изображений: {len(image_files)}")
+    # Обрабатываем файлы начиная с выбранного
+    for file in files[start_index:]:
+        full_path = os.path.abspath(file)
+        
+        # Git add
+        add_cmd = f"git add \"{full_path}\""
+        print(f"> {add_cmd}")
+        subprocess.run(add_cmd, shell=True, check=True)
+        
+        # Git commit
+        commit_msg = f"\"Добавлен файл: {full_path}\""
+        commit_cmd = f"git commit -m {commit_msg}"
+        print(f"> {commit_cmd}")
+        subprocess.run(commit_cmd, shell=True, check=True)
+        
+        # Git push
+        push_cmd = "git push origin main"
+        print(f"> {push_cmd}")
+        subprocess.run(push_cmd, shell=True, check=True)
+        
+        print(f"Файл '{file}' успешно отправлен.\n")
 
 if __name__ == "__main__":
-    main()
+    # Укажите путь к директории здесь (вместо input)
+    TARGET_DIRECTORY = "/home/den/MangaOcen/GrandBlue/downloaded_images"  # ⚠️ Замените на свой путь!
+    
+    # Укажите файл, с которого начать (или None для начала с первого)
+    START_FROM_FILE = "/home/den/MangaOcen/GrandBlue/downloaded_images/grand_blue_vol06_ch022_p025.png"  # Например: "example.txt"
+    
+    if not os.path.isdir(TARGET_DIRECTORY):
+        print("Ошибка: директория не существует!")
+    else:
+        git_operations_for_directory(TARGET_DIRECTORY, START_FROM_FILE)
