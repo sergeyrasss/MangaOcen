@@ -37,7 +37,7 @@ for chapter_dir in sorted(os.listdir(SORTED_MANGA_DIR), key=lambda x: float(pars
     if pages:
         chapters.append((chapter_num, chapter_dir, sorted(pages, key=lambda x: x[0])))
 
-# HTML шаблон с максимальной совместимостью
+# HTML шаблон с фиксированной навигацией
 HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -47,7 +47,7 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
     <style type="text/css">
         body {{
             margin: 0;
-            padding: 0;
+            padding: 0 0 100px 0;
             background-color: #000000;
             -webkit-text-size-adjust: none;
         }}
@@ -63,7 +63,7 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
             display: block;
             margin: 0 auto;
         }}
-        .navigation {{
+        .nav-container {{
             position: fixed;
             bottom: 0;
             left: 0;
@@ -71,31 +71,36 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
             background-color: #000000;
             padding: 10px;
             text-align: center;
-            z-index: 100;
+            z-index: 1000;
+            border-top: 1px solid #333;
+        }}
+        .nav-inner {{
+            max-width: 500px;
+            margin: 0 auto;
         }}
         select {{
-            width: 90%;
-            max-width: 300px;
+            width: 100%;
             height: 40px;
-            margin: 5px auto;
+            margin-bottom: 10px;
             font-size: 16px;
             background-color: #333333;
             color: #FFFFFF;
             border: 1px solid #666666;
             -webkit-appearance: menulist;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
         }}
         a.button {{
-            display: inline-block;
-            width: 90%;
-            max-width: 300px;
+            display: block;
+            width: 100%;
             height: 40px;
             line-height: 40px;
-            margin: 5px auto;
             font-size: 16px;
             background-color: #FF6B00;
             color: #FFFFFF;
             text-decoration: none;
             font-weight: bold;
+            -webkit-border-radius: 5px;
             border-radius: 5px;
         }}
     </style>
@@ -103,14 +108,14 @@ HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
 <body>
     {pages_html}
     
-    <div class="navigation">
-        <form action="#" method="get">
+    <div class="nav-container">
+        <div class="nav-inner">
             <select name="chapter" onchange="window.location=this.options[this.selectedIndex].value">
                 <option value="">Выберите главу...</option>
                 {chapters_options}
             </select>
-        </form>
-        <a href="{relative_main_path}" class="button">НА ГЛАВНУЮ</a>
+            <a href="{relative_main_path}" class="button">НА ГЛАВНУЮ</a>
+        </div>
     </div>
 </body>
 </html>
