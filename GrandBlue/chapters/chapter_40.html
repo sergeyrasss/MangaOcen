@@ -1,99 +1,74 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Grand Blue - Глава 40</title>
-    <style>
-        * {
+    <style type="text/css">
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #000;
-            overflow-x: hidden;
-            touch-action: pan-y;
+            background-color: #000000;
+            -webkit-text-size-adjust: none;
         }
         .page-container {
-            width: 100vw;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            text-align: center;
             margin: 0 auto;
+            padding: 0;
         }
         .page-image {
             max-width: 100%;
-            max-height: 100vh;
-            object-fit: contain;
+            height: auto;
             display: block;
+            margin: 0 auto;
         }
-        .chapter-navigation {
-            background-color: #000;
-            padding: 15px;
-            text-align: center;
+        .navigation {
             position: fixed;
             bottom: 0;
-            width: 100%;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .chapter-selector {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            background-color: #222;
-            color: white;
-            font-size: 16px;
-            width: 100%;
-            max-width: 350px;
-            cursor: pointer;
-        }
-        .home-button {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            background-color: #FF6B00;
-            color: white;
-            font-size: 16px;
-            width: 100%;
-            max-width: 350px;
-            cursor: pointer;
-            text-decoration: none;
+            left: 0;
+            right: 0;
+            background-color: #000000;
+            padding: 10px;
             text-align: center;
-            font-weight: bold;
+            z-index: 100;
         }
-        @media (min-width: 768px) {
-            .page-image {
-                max-width: 80%;
-            }
+        select {
+            width: 90%;
+            max-width: 300px;
+            height: 40px;
+            margin: 5px auto;
+            font-size: 16px;
+            background-color: #333333;
+            color: #FFFFFF;
+            border: 1px solid #666666;
+            -webkit-appearance: menulist;
+        }
+        a.button {
+            display: inline-block;
+            width: 90%;
+            max-width: 300px;
+            height: 40px;
+            line-height: 40px;
+            margin: 5px auto;
+            font-size: 16px;
+            background-color: #FF6B00;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
+    <div class="page-container"><img class="page-image" src="../sorted_manga/Chapter 40/grand_blue_ch40_p39.jpg" alt="Страница 39" /></div>
+<div class="page-container"><img class="page-image" src="../sorted_manga/Chapter 40/grand_blue_ch40_p40.jpg" alt="Страница 40" /></div>
     
-            <link rel="preload" as="image" href="../sorted_manga/Chapter 40/grand_blue_ch40_p40.jpg">
-            <div class="page-container">
-                <img class="page-image" src="../sorted_manga/Chapter 40/grand_blue_ch40_p39.jpg" loading="eager" 
-                     alt="Страница 39" decoding="async">
-            </div>
-        
-
-            
-            <div class="page-container">
-                <img class="page-image" src="../sorted_manga/Chapter 40/grand_blue_ch40_p40.jpg" loading="eager" 
-                     alt="Страница 40" decoding="async">
-            </div>
-        
-    
-    <div class="chapter-navigation">
-        <select class="chapter-selector" onchange="location = this.value;">
-            <option value="">Выберите главу...</option>
-            <option value="chapter_1.html" >Глава 1</option>
+    <div class="navigation">
+        <form action="#" method="get">
+            <select name="chapter" onchange="window.location=this.options[this.selectedIndex].value">
+                <option value="">Выберите главу...</option>
+                <option value="chapter_1.html" >Глава 1</option>
 <option value="chapter_2.html" >Глава 2</option>
 <option value="chapter_3.html" >Глава 3</option>
 <option value="chapter_4.html" >Глава 4</option>
@@ -138,7 +113,7 @@
 <option value="chapter_37.html" >Глава 37</option>
 <option value="chapter_38.html" >Глава 38</option>
 <option value="chapter_39.html" >Глава 39</option>
-<option value="chapter_40.html" selected>Глава 40</option>
+<option value="chapter_40.html" selected="selected">Глава 40</option>
 <option value="chapter_41.html" >Глава 41</option>
 <option value="chapter_41_5.html" >Глава 41.5</option>
 <option value="chapter_42.html" >Глава 42</option>
@@ -212,8 +187,9 @@
 <option value="chapter_101_5.html" >Глава 101.5</option>
 <option value="chapter_102.html" >Глава 102</option>
 <option value="chapter_103.html" >Глава 103</option>
-        </select>
-        <a href="../../index.html" class="home-button">НА ГЛАВНУЮ</a>
+            </select>
+        </form>
+        <a href="../../index.html" class="button">НА ГЛАВНУЮ</a>
     </div>
 </body>
 </html>

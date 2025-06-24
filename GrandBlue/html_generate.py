@@ -6,12 +6,10 @@ from pathlib import Path
 MANGA_TITLE = 'Grand Blue'
 SORTED_MANGA_DIR = '/home/den/MangaOcen/GrandBlue/sorted_manga'
 OUTPUT_FOLDER = '/home/den/MangaOcen/GrandBlue/chapters'
-MAIN_PAGE_PATH = '/home/den/MangaOcen/index.html'  # Абсолютный путь к главной странице
+MAIN_PAGE_PATH = '/home/den/MangaOcen/index.html'
 
-# Рассчитываем относительный путь от папки chapters до главной страницы
+# Рассчитываем относительный путь
 relative_main_path = os.path.relpath(MAIN_PAGE_PATH, OUTPUT_FOLDER)
-
-# Создаем папку для глав
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 def parse_chapter_number(chapter_dir):
@@ -39,92 +37,80 @@ for chapter_dir in sorted(os.listdir(SORTED_MANGA_DIR), key=lambda x: float(pars
     if pages:
         chapters.append((chapter_num, chapter_dir, sorted(pages, key=lambda x: x[0])))
 
-# HTML шаблон с оптимизациями
-HTML_TEMPLATE = """<!DOCTYPE html>
-<html lang="ru">
+# HTML шаблон с максимальной совместимостью
+HTML_TEMPLATE = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>{manga_title} - Глава {chapter_num}</title>
-    <style>
-        * {{
+    <style type="text/css">
+        body {{
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }}
-        body {{
-            background-color: #000;
-            overflow-x: hidden;
-            touch-action: pan-y;
+            background-color: #000000;
+            -webkit-text-size-adjust: none;
         }}
         .page-container {{
-            width: 100vw;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            text-align: center;
             margin: 0 auto;
+            padding: 0;
         }}
         .page-image {{
             max-width: 100%;
-            max-height: 100vh;
-            object-fit: contain;
+            height: auto;
             display: block;
+            margin: 0 auto;
         }}
-        .chapter-navigation {{
-            background-color: #000;
-            padding: 15px;
-            text-align: center;
+        .navigation {{
             position: fixed;
             bottom: 0;
-            width: 100%;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }}
-        .chapter-selector {{
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            background-color: #222;
-            color: white;
-            font-size: 16px;
-            width: 100%;
-            max-width: 350px;
-            cursor: pointer;
-        }}
-        .home-button {{
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            background-color: #FF6B00;
-            color: white;
-            font-size: 16px;
-            width: 100%;
-            max-width: 350px;
-            cursor: pointer;
-            text-decoration: none;
+            left: 0;
+            right: 0;
+            background-color: #000000;
+            padding: 10px;
             text-align: center;
-            font-weight: bold;
+            z-index: 100;
         }}
-        @media (min-width: 768px) {{
-            .page-image {{
-                max-width: 80%;
-            }}
+        select {{
+            width: 90%;
+            max-width: 300px;
+            height: 40px;
+            margin: 5px auto;
+            font-size: 16px;
+            background-color: #333333;
+            color: #FFFFFF;
+            border: 1px solid #666666;
+            -webkit-appearance: menulist;
+        }}
+        a.button {{
+            display: inline-block;
+            width: 90%;
+            max-width: 300px;
+            height: 40px;
+            line-height: 40px;
+            margin: 5px auto;
+            font-size: 16px;
+            background-color: #FF6B00;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
         }}
     </style>
 </head>
 <body>
     {pages_html}
     
-    <div class="chapter-navigation">
-        <select class="chapter-selector" onchange="location = this.value;">
-            <option value="">Выберите главу...</option>
-            {chapters_options}
-        </select>
-        <a href="{relative_main_path}" class="home-button">НА ГЛАВНУЮ</a>
+    <div class="navigation">
+        <form action="#" method="get">
+            <select name="chapter" onchange="window.location=this.options[this.selectedIndex].value">
+                <option value="">Выберите главу...</option>
+                {chapters_options}
+            </select>
+        </form>
+        <a href="{relative_main_path}" class="button">НА ГЛАВНУЮ</a>
     </div>
 </body>
 </html>
@@ -136,30 +122,21 @@ for idx, (chapter_num, chapter_dir, pages) in enumerate(chapters):
     output_filename = f"chapter_{safe_chapter_num}.html"
     output_path = os.path.join(OUTPUT_FOLDER, output_filename)
     
-    # Генерируем HTML страниц с предзагрузкой
+    # Генерируем HTML страниц
     pages_html = []
-    for i, (page_num, filename) in enumerate(pages):
+    for page_num, filename in pages:
         img_path = os.path.join('..', 'sorted_manga', chapter_dir, filename).replace('\\', '/')
-        
-        # Добавляем предзагрузку для следующего изображения
-        preload = ""
-        if i < len(pages) - 1:
-            next_img = os.path.join('..', 'sorted_manga', chapter_dir, pages[i+1][1]).replace('\\', '/')
-            preload = f'<link rel="preload" as="image" href="{next_img}">'
-        
-        pages_html.append(f"""
-            {preload}
-            <div class="page-container">
-                <img class="page-image" src="{img_path}" loading="eager" 
-                     alt="Страница {page_num}" decoding="async">
-            </div>
-        """)
+        pages_html.append(
+            '<div class="page-container">'
+            f'<img class="page-image" src="{img_path}" alt="Страница {page_num}" />'
+            '</div>'
+        )
     
     # Опции для выбора глав
     chapters_options = []
     for ch_num, _, _ in chapters:
         safe_num = ch_num.replace('.', '_')
-        selected = 'selected' if ch_num == chapter_num else ''
+        selected = 'selected="selected"' if ch_num == chapter_num else ''
         chapters_options.append(
             f'<option value="chapter_{safe_num}.html" {selected}>Глава {ch_num}</option>'
         )
