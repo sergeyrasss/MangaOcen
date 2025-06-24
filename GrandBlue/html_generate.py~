@@ -3,41 +3,48 @@ import re
 from pathlib import Path
 
 # Настройки
-IMAGE_FOLDER = 'downloaded_images'  # Папка с изображениями
-OUTPUT_FOLDER = 'chapters'         # Папка для HTML-файлов
-MANGA_TITLE = 'Grand Blue'         # Название манги
+MANGA_TITLE = 'Grand Blue'  # Название манги
+SORTED_MANGA_DIR = '/home/den/MangaOcen/GrandBlue/sorted_manga'  # Папка с главами
+OUTPUT_FOLDER = 'chapters'  # Папка для HTML-файлов
 
 # Создаем папку для глав, если ее нет
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# Функция для извлечения информации из имени файла
-def parse_filename(filename):
-    match = re.match(r'grand_blue_vol(\d+)_ch(\d+\.?\d*)_p(\d+)\.(jpg|png|jpeg)', filename.lower())
+# Функция для извлечения номера главы из имени папки
+def parse_chapter_number(chapter_dir):
+    match = re.match(r'Chapter (\d+\.?\d*)', chapter_dir)
     if match:
-        return {
-            'volume': match.group(1),
-            'chapter': match.group(2),
-            'page': match.group(3),
-            'ext': match.group(4)
-        }
+        return match.group(1)
     return None
 
-# Собираем все изображения и группируем по главам
-chapters = {}
-for filename in os.listdir(IMAGE_FOLDER):
-    info = parse_filename(filename)
-    if info:
-        chapter_key = f"vol{info['volume']}_ch{info['chapter']}"
-        if chapter_key not in chapters:
-            chapters[chapter_key] = []
-        chapters[chapter_key].append((int(info['page']), filename))
+# Собираем все главы и их изображения
+chapters = []
+for chapter_dir in os.listdir(SORTED_MANGA_DIR):
+    chapter_num = parse_chapter_number(chapter_dir)
+    if chapter_num is None:
+        continue
+    
+    chapter_path = os.path.join(SORTED_MANGA_DIR, chapter_dir)
+    if not os.path.isdir(chapter_path):
+        continue
+    
+    # Собираем страницы главы
+    pages = []
+    for filename in os.listdir(chapter_path):
+        if filename.lower().endswith(('.jpg', '.jpeg', '.png')):
+            # Извлекаем номер страницы из имени файла
+            page_match = re.search(r'_p(\d+)\.', filename.lower())
+            if page_match:
+                pages.append((int(page_match.group(1)), filename))
+    
+    # Сортируем страницы по номеру
+    pages.sort(key=lambda x: x[0])
+    chapters.append((chapter_num, chapter_dir, pages))
 
-# Сортируем главы и страницы внутри глав
-sorted_chapters = sorted(chapters.items(), key=lambda x: float(x[0].split('_ch')[1]))
-for chapter in sorted_chapters:
-    chapter[1].sort(key=lambda x: x[0])
+# Сортируем главы по номеру (преобразуем в float для правильной сортировки)
+chapters.sort(key=lambda x: float(x[0]))
 
-# HTML шаблон
+# HTML шаблон (аналогичный предыдущему, но с обновленными путями)
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -129,22 +136,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-# Создаем список всех глав для навигации
-all_chapters = []
-for chapter_key, _ in sorted_chapters:
-    chapter_num = chapter_key.split('_ch')[1]
-    all_chapters.append((chapter_num, chapter_key))
-
 # Генерируем HTML для каждой главы
-for chapter_key, pages in sorted_chapters:
-    chapter_num = chapter_key.split('_ch')[1]
+for chapter_num, chapter_dir, pages in chapters:
     safe_chapter_num = chapter_num.replace('.', '_')
     
     # Генерируем HTML для страниц
     pages_html = []
     for page_num, filename in pages:
         # Используем относительный путь к изображению
-        img_path = os.path.join('..', IMAGE_FOLDER, filename).replace('\\', '/')
+        img_path = os.path.join('..', SORTED_MANGA_DIR, chapter_dir, filename).replace('\\', '/')
         pages_html.append(
             f'<div class="page-container">\n'
             f'    <img class="page-image" src="{img_path}" loading="lazy">\n'
@@ -153,7 +153,7 @@ for chapter_key, pages in sorted_chapters:
     
     # Создаем опции для выбора глав
     chapters_options = []
-    for ch_num, ch_key in all_chapters:
+    for ch_num, ch_dir, _ in chapters:
         safe_ch_num = ch_num.replace('.', '_')
         selected = 'selected' if ch_num == chapter_num else ''
         chapters_options.append(

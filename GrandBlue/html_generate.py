@@ -3,41 +3,43 @@ import re
 from pathlib import Path
 
 # Настройки
-IMAGE_FOLDER = 'downloaded_images'  # Папка с изображениями
-OUTPUT_FOLDER = 'chapters'         # Папка для HTML-файлов
-MANGA_TITLE = 'Grand Blue'         # Название манги
+MANGA_TITLE = 'Grand Blue'
+SORTED_MANGA_DIR = '/home/den/MangaOcen/GrandBlue/sorted_manga'
+OUTPUT_FOLDER = '/home/den/MangaOcen/GrandBlue/chapters'
+MAIN_PAGE_PATH = '/home/den/MangaOcen/index.html'  # Абсолютный путь к главной странице
 
-# Создаем папку для глав, если ее нет
+# Рассчитываем относительный путь от папки chapters до главной страницы
+relative_main_path = os.path.relpath(MAIN_PAGE_PATH, OUTPUT_FOLDER)
+
+# Создаем папку для глав
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# Функция для извлечения информации из имени файла
-def parse_filename(filename):
-    match = re.match(r'grand_blue_vol(\d+)_ch(\d+\.?\d*)_p(\d+)\.(jpg|png|jpeg)', filename.lower())
-    if match:
-        return {
-            'volume': match.group(1),
-            'chapter': match.group(2),
-            'page': match.group(3),
-            'ext': match.group(4)
-        }
-    return None
+def parse_chapter_number(chapter_dir):
+    match = re.match(r'Chapter (\d+\.?\d*)', chapter_dir)
+    return match.group(1) if match else None
 
-# Собираем все изображения и группируем по главам
-chapters = {}
-for filename in os.listdir(IMAGE_FOLDER):
-    info = parse_filename(filename)
-    if info:
-        chapter_key = f"vol{info['volume']}_ch{info['chapter']}"
-        if chapter_key not in chapters:
-            chapters[chapter_key] = []
-        chapters[chapter_key].append((int(info['page']), filename))
+# Собираем и сортируем главы
+chapters = []
+for chapter_dir in sorted(os.listdir(SORTED_MANGA_DIR), key=lambda x: float(parse_chapter_number(x) or 0)):
+    chapter_num = parse_chapter_number(chapter_dir)
+    if not chapter_num:
+        continue
+    
+    chapter_path = os.path.join(SORTED_MANGA_DIR, chapter_dir)
+    if not os.path.isdir(chapter_path):
+        continue
+    
+    pages = []
+    for filename in sorted(os.listdir(chapter_path)):
+        if filename.lower().endswith(('.jpg', '.jpeg', '.png')):
+            page_match = re.search(r'_p(\d+)\.', filename.lower())
+            if page_match:
+                pages.append((int(page_match.group(1)), filename))
+    
+    if pages:
+        chapters.append((chapter_num, chapter_dir, sorted(pages, key=lambda x: x[0])))
 
-# Сортируем главы и страницы внутри глав
-sorted_chapters = sorted(chapters.items(), key=lambda x: float(x[0].split('_ch')[1]))
-for chapter in sorted_chapters:
-    chapter[1].sort(key=lambda x: x[0])
-
-# HTML шаблон
+# HTML шаблон с обновленной ссылкой
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -50,24 +52,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 0;
             box-sizing: border-box;
         }}
-        
         body {{
             background-color: #000;
             overflow-x: hidden;
         }}
-        
         .page-container {{
             width: 100vw;
             margin: 0;
             padding: 0;
         }}
-        
         .page-image {{
             width: 100%;
             display: block;
             margin: 0 auto;
         }}
-        
         .chapter-navigation {{
             background-color: #000;
             padding: 20px;
@@ -77,7 +75,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             align-items: center;
             gap: 15px;
         }}
-        
         .chapter-selector {{
             padding: 12px 25px;
             border-radius: 25px;
@@ -89,7 +86,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             max-width: 400px;
             cursor: pointer;
         }}
-        
         .home-button {{
             padding: 12px 25px;
             border-radius: 25px;
@@ -104,7 +100,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             text-align: center;
             font-weight: bold;
         }}
-        
         @media (orientation: landscape) {{
             .page-image {{
                 width: auto;
@@ -123,58 +118,46 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <option value="">Выберите главу...</option>
             {chapters_options}
         </select>
-        <a href="index.html" class="home-button">НА ГЛАВНУЮ</a>
+        <a href="{relative_main_path}" class="home-button">НА ГЛАВНУЮ</a>
     </div>
 </body>
 </html>
 """
 
-# Создаем список всех глав для навигации
-all_chapters = []
-for chapter_key, _ in sorted_chapters:
-    chapter_num = chapter_key.split('_ch')[1]
-    all_chapters.append((chapter_num, chapter_key))
-
-# Генерируем HTML для каждой главы
-for chapter_key, pages in sorted_chapters:
-    chapter_num = chapter_key.split('_ch')[1]
+# Генерируем HTML файлы
+for chapter_num, chapter_dir, pages in chapters:
     safe_chapter_num = chapter_num.replace('.', '_')
+    output_filename = f"chapter_{safe_chapter_num}.html"
+    output_path = os.path.join(OUTPUT_FOLDER, output_filename)
     
-    # Генерируем HTML для страниц
+    # Генерируем HTML страниц
     pages_html = []
     for page_num, filename in pages:
-        # Используем относительный путь к изображению
-        img_path = os.path.join('..', IMAGE_FOLDER, filename).replace('\\', '/')
+        img_path = os.path.join('..', 'sorted_manga', chapter_dir, filename).replace('\\', '/')
         pages_html.append(
             f'<div class="page-container">\n'
             f'    <img class="page-image" src="{img_path}" loading="lazy">\n'
             f'</div>'
         )
     
-    # Создаем опции для выбора глав
-    chapters_options = []
-    for ch_num, ch_key in all_chapters:
-        safe_ch_num = ch_num.replace('.', '_')
-        selected = 'selected' if ch_num == chapter_num else ''
-        chapters_options.append(
-            f'<option value="chapter_{safe_ch_num}.html" {selected}>Глава {ch_num}</option>'
-        )
+    # Опции для выбора глав
+    chapters_options = [
+        f'<option value="chapter_{ch_num.replace(".", "_")}.html" '
+        f'{"selected" if ch_num == chapter_num else ""}>'
+        f'Глава {ch_num}</option>'
+        for ch_num, _, _ in chapters
+    ]
     
     # Заполняем шаблон
-    html_content = HTML_TEMPLATE.format(
-        manga_title=MANGA_TITLE,
-        chapter_num=chapter_num,
-        pages_html='\n'.join(pages_html),
-        chapters_options='\n'.join(chapters_options)
-    )
-    
-    # Сохраняем HTML файл
-    output_filename = f"chapter_{safe_chapter_num}.html"
-    output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-    
     with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(html_content)
+        f.write(HTML_TEMPLATE.format(
+            manga_title=MANGA_TITLE,
+            chapter_num=chapter_num,
+            pages_html='\n'.join(pages_html),
+            chapters_options='\n'.join(chapters_options),
+            relative_main_path=relative_main_path
+        ))
     
     print(f"Создана глава: {output_path}")
 
-print("\nГенерация глав завершена!")
+print(f"\nГенерация завершена! Главная страница: {MAIN_PAGE_PATH}")
