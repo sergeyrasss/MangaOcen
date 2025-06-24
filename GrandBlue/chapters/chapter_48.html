@@ -7,7 +7,7 @@
     <style type="text/css">
         body {
             margin: 0;
-            padding: 0;
+            padding: 0 0 100px 0;
             background-color: #000000;
             -webkit-text-size-adjust: none;
         }
@@ -23,7 +23,7 @@
             display: block;
             margin: 0 auto;
         }
-        .navigation {
+        .nav-container {
             position: fixed;
             bottom: 0;
             left: 0;
@@ -31,31 +31,36 @@
             background-color: #000000;
             padding: 10px;
             text-align: center;
-            z-index: 100;
+            z-index: 1000;
+            border-top: 1px solid #333;
+        }
+        .nav-inner {
+            max-width: 500px;
+            margin: 0 auto;
         }
         select {
-            width: 90%;
-            max-width: 300px;
+            width: 100%;
             height: 40px;
-            margin: 5px auto;
+            margin-bottom: 10px;
             font-size: 16px;
             background-color: #333333;
             color: #FFFFFF;
             border: 1px solid #666666;
             -webkit-appearance: menulist;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
         }
         a.button {
-            display: inline-block;
-            width: 90%;
-            max-width: 300px;
+            display: block;
+            width: 100%;
             height: 40px;
             line-height: 40px;
-            margin: 5px auto;
             font-size: 16px;
             background-color: #FF6B00;
             color: #FFFFFF;
             text-decoration: none;
             font-weight: bold;
+            -webkit-border-radius: 5px;
             border-radius: 5px;
         }
     </style>
@@ -63,8 +68,8 @@
 <body>
     <div class="page-container"><img class="page-image" src="../sorted_manga/Chapter 48/grand_blue_ch48_p1.jpg" alt="Страница 1" /></div>
     
-    <div class="navigation">
-        <form action="#" method="get">
+    <div class="nav-container">
+        <div class="nav-inner">
             <select name="chapter" onchange="window.location=this.options[this.selectedIndex].value">
                 <option value="">Выберите главу...</option>
                 <option value="chapter_1.html" >Глава 1</option>
@@ -187,8 +192,8 @@
 <option value="chapter_102.html" >Глава 102</option>
 <option value="chapter_103.html" >Глава 103</option>
             </select>
-        </form>
-        <a href="../../index.html" class="button">НА ГЛАВНУЮ</a>
+            <a href="../../index.html" class="button">НА ГЛАВНУЮ</a>
+        </div>
     </div>
 </body>
 </html>
