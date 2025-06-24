@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grand Blue - Глава 90</title>
     <style>
         * {
@@ -13,152 +13,278 @@
         body {
             background-color: #000;
             overflow-x: hidden;
+            touch-action: pan-y;
         }
         .page-container {
             width: 100vw;
-            margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
         }
         .page-image {
-            width: 100%;
+            max-width: 100%;
+            max-height: 100vh;
+            object-fit: contain;
             display: block;
-            margin: 0 auto;
         }
         .chapter-navigation {
             background-color: #000;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
         .chapter-selector {
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 10px 20px;
+            border-radius: 20px;
             border: none;
             background-color: #222;
             color: white;
-            font-size: 18px;
-            width: 90%;
-            max-width: 400px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 350px;
             cursor: pointer;
         }
         .home-button {
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 10px 20px;
+            border-radius: 20px;
             border: none;
             background-color: #FF6B00;
             color: white;
-            font-size: 18px;
-            width: 90%;
-            max-width: 400px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 350px;
             cursor: pointer;
             text-decoration: none;
             text-align: center;
             font-weight: bold;
         }
-        @media (orientation: landscape) {
+        @media (min-width: 768px) {
             .page-image {
-                width: auto;
-                height: 100vh;
+                max-width: 80%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="reader-content">
-        <div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p1.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p2.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p3.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p4.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p5.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p6.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p7.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p8.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p9.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p10.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p11.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p12.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p13.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p14.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p15.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p16.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p17.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p18.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p19.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p20.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p21.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p22.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p23.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p24.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p25.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p26.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p27.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p28.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p29.jpg" loading="lazy">
-</div>
-<div class="page-container">
-    <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p30.jpg" loading="lazy">
-</div>
-    </div>
+    
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p2.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p1.jpg" loading="eager" 
+                     alt="Страница 1" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p3.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p2.jpg" loading="eager" 
+                     alt="Страница 2" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p4.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p3.jpg" loading="eager" 
+                     alt="Страница 3" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p5.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p4.jpg" loading="eager" 
+                     alt="Страница 4" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p6.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p5.jpg" loading="eager" 
+                     alt="Страница 5" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p7.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p6.jpg" loading="eager" 
+                     alt="Страница 6" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p8.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p7.jpg" loading="eager" 
+                     alt="Страница 7" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p9.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p8.jpg" loading="eager" 
+                     alt="Страница 8" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p10.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p9.jpg" loading="eager" 
+                     alt="Страница 9" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p11.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p10.jpg" loading="eager" 
+                     alt="Страница 10" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p12.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p11.jpg" loading="eager" 
+                     alt="Страница 11" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p13.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p12.jpg" loading="eager" 
+                     alt="Страница 12" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p14.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p13.jpg" loading="eager" 
+                     alt="Страница 13" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p15.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p14.jpg" loading="eager" 
+                     alt="Страница 14" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p16.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p15.jpg" loading="eager" 
+                     alt="Страница 15" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p17.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p16.jpg" loading="eager" 
+                     alt="Страница 16" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p18.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p17.jpg" loading="eager" 
+                     alt="Страница 17" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p19.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p18.jpg" loading="eager" 
+                     alt="Страница 18" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p20.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p19.jpg" loading="eager" 
+                     alt="Страница 19" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p21.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p20.jpg" loading="eager" 
+                     alt="Страница 20" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p22.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p21.jpg" loading="eager" 
+                     alt="Страница 21" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p23.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p22.jpg" loading="eager" 
+                     alt="Страница 22" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p24.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p23.jpg" loading="eager" 
+                     alt="Страница 23" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p25.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p24.jpg" loading="eager" 
+                     alt="Страница 24" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p26.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p25.jpg" loading="eager" 
+                     alt="Страница 25" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p27.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p26.jpg" loading="eager" 
+                     alt="Страница 26" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p28.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p27.jpg" loading="eager" 
+                     alt="Страница 27" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p29.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p28.jpg" loading="eager" 
+                     alt="Страница 28" decoding="async">
+            </div>
+        
+
+            <link rel="preload" as="image" href="../sorted_manga/Chapter 90/grand_blue_ch90_p30.jpg">
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p29.jpg" loading="eager" 
+                     alt="Страница 29" decoding="async">
+            </div>
+        
+
+            
+            <div class="page-container">
+                <img class="page-image" src="../sorted_manga/Chapter 90/grand_blue_ch90_p30.jpg" loading="eager" 
+                     alt="Страница 30" decoding="async">
+            </div>
+        
     
     <div class="chapter-navigation">
         <select class="chapter-selector" onchange="location = this.value;">

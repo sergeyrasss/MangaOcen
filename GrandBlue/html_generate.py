@@ -39,12 +39,12 @@ for chapter_dir in sorted(os.listdir(SORTED_MANGA_DIR), key=lambda x: float(pars
     if pages:
         chapters.append((chapter_num, chapter_dir, sorted(pages, key=lambda x: x[0])))
 
-# HTML шаблон с обновленной ссылкой
+# HTML шаблон с оптимизациями
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{manga_title} - Глава {chapter_num}</title>
     <style>
         * {{
@@ -55,63 +55,69 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         body {{
             background-color: #000;
             overflow-x: hidden;
+            touch-action: pan-y;
         }}
         .page-container {{
             width: 100vw;
-            margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
         }}
         .page-image {{
-            width: 100%;
+            max-width: 100%;
+            max-height: 100vh;
+            object-fit: contain;
             display: block;
-            margin: 0 auto;
         }}
         .chapter-navigation {{
             background-color: #000;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }}
         .chapter-selector {{
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 10px 20px;
+            border-radius: 20px;
             border: none;
             background-color: #222;
             color: white;
-            font-size: 18px;
-            width: 90%;
-            max-width: 400px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 350px;
             cursor: pointer;
         }}
         .home-button {{
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 10px 20px;
+            border-radius: 20px;
             border: none;
             background-color: #FF6B00;
             color: white;
-            font-size: 18px;
-            width: 90%;
-            max-width: 400px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 350px;
             cursor: pointer;
             text-decoration: none;
             text-align: center;
             font-weight: bold;
         }}
-        @media (orientation: landscape) {{
+        @media (min-width: 768px) {{
             .page-image {{
-                width: auto;
-                height: 100vh;
+                max-width: 80%;
             }}
         }}
     </style>
 </head>
 <body>
-    <div class="reader-content">
-        {pages_html}
-    </div>
+    {pages_html}
     
     <div class="chapter-navigation">
         <select class="chapter-selector" onchange="location = this.value;">
@@ -125,28 +131,38 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 """
 
 # Генерируем HTML файлы
-for chapter_num, chapter_dir, pages in chapters:
+for idx, (chapter_num, chapter_dir, pages) in enumerate(chapters):
     safe_chapter_num = chapter_num.replace('.', '_')
     output_filename = f"chapter_{safe_chapter_num}.html"
     output_path = os.path.join(OUTPUT_FOLDER, output_filename)
     
-    # Генерируем HTML страниц
+    # Генерируем HTML страниц с предзагрузкой
     pages_html = []
-    for page_num, filename in pages:
+    for i, (page_num, filename) in enumerate(pages):
         img_path = os.path.join('..', 'sorted_manga', chapter_dir, filename).replace('\\', '/')
-        pages_html.append(
-            f'<div class="page-container">\n'
-            f'    <img class="page-image" src="{img_path}" loading="lazy">\n'
-            f'</div>'
-        )
+        
+        # Добавляем предзагрузку для следующего изображения
+        preload = ""
+        if i < len(pages) - 1:
+            next_img = os.path.join('..', 'sorted_manga', chapter_dir, pages[i+1][1]).replace('\\', '/')
+            preload = f'<link rel="preload" as="image" href="{next_img}">'
+        
+        pages_html.append(f"""
+            {preload}
+            <div class="page-container">
+                <img class="page-image" src="{img_path}" loading="eager" 
+                     alt="Страница {page_num}" decoding="async">
+            </div>
+        """)
     
     # Опции для выбора глав
-    chapters_options = [
-        f'<option value="chapter_{ch_num.replace(".", "_")}.html" '
-        f'{"selected" if ch_num == chapter_num else ""}>'
-        f'Глава {ch_num}</option>'
-        for ch_num, _, _ in chapters
-    ]
+    chapters_options = []
+    for ch_num, _, _ in chapters:
+        safe_num = ch_num.replace('.', '_')
+        selected = 'selected' if ch_num == chapter_num else ''
+        chapters_options.append(
+            f'<option value="chapter_{safe_num}.html" {selected}>Глава {ch_num}</option>'
+        )
     
     # Заполняем шаблон
     with open(output_path, 'w', encoding='utf-8') as f:
