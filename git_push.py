@@ -2,23 +2,19 @@ import os
 import subprocess
 from pathlib import Path
 
-def git_operations_for_directory(directory, start_from_file=None):
+def git_operations_for_directory(repo_root, target_dir, start_from_file=None):
     try:
-        # Сохраняем исходную директорию для возврата
-        original_dir = os.getcwd()
-        
-        # Проверяем и переходим в целевую директорию
-        if not os.path.isdir(directory):
-            print(f"❌ Директория не существует: {directory}")
-            return
-        
-        os.chdir(directory)
-        print(f"📁 Рабочая директория: {os.getcwd()}")
+        # Переходим в корень репозитория
+        os.chdir(repo_root)
+        print(f"📁 Корень репозитория: {os.getcwd()}")
 
-        # Получаем список файлов
+        # Получаем относительный путь к целевой директории
+        relative_target = os.path.relpath(target_dir, repo_root)
+        
+        # Получаем список файлов в целевой директории
         files = sorted([
-            f for f in os.listdir() 
-            if os.path.isfile(f) and not f.startswith('.')
+            f for f in os.listdir(target_dir)
+            if os.path.isfile(os.path.join(target_dir, f)) and not f.startswith('.')
         ])
         
         if not files:
@@ -28,20 +24,19 @@ def git_operations_for_directory(directory, start_from_file=None):
         # Определяем начальный индекс
         start_index = 0
         if start_from_file:
-            # Извлекаем только имя файла из пути, если передан полный путь
-            start_file_name = os.path.basename(start_from_file)
             try:
-                start_index = files.index(start_file_name)
-                print(f"🔹 Начинаем с файла: {start_file_name}")
+                start_index = files.index(os.path.basename(start_from_file))
+                print(f"🔹 Начинаем с файла: {files[start_index]}")
             except ValueError:
-                print(f"⚠️ Файл '{start_file_name}' не найден. Начинаем с первого.")
+                print(f"⚠️ Файл '{start_from_file}' не найден. Начинаем с первого.")
 
         for file in files[start_index:]:
-            print(f"\n🔹 Обработка файла: {file}")
+            file_path = os.path.join(relative_target, file)
+            print(f"\n🔹 Обработка файла: {file_path}")
 
-            # 1. git add (используем относительный путь)
+            # 1. git add
             try:
-                subprocess.run(["git", "add", file], check=True)
+                subprocess.run(["git", "add","-f", file_path], check=True)
                 print("✅ Файл добавлен в индекс")
             except subprocess.CalledProcessError:
                 print("❌ Ошибка при добавлении файла, пропускаем")
@@ -64,13 +59,15 @@ def git_operations_for_directory(directory, start_from_file=None):
                 print("❌ Ошибка при отправке, прерываем выполнение")
                 break
 
+    except Exception as e:
+        print(f"⚠️ Критическая ошибка: {e}")
     finally:
-        # Всегда возвращаемся в исходную директорию
-        os.chdir(original_dir)
+        print("\n✅ Выполнение завершено")
 
 if __name__ == "__main__":
     # Настройки
-    TARGET_DIRECTORY = "/home/den/MangaOcen/GrandBlue/downloaded_images"
-    START_FROM_FILE = "grand_blue_vol06_ch022_p025.png"  # Только имя файла
+    REPO_ROOT = "/home/den/MangaOcen"  # Корень репозитория (где находится .git)
+    TARGET_DIR = "/home/den/MangaOcen/GrandBlue/downloaded_images"  # Директория с файлами
+    START_FROM_FILE = "grand_blue_vol06_ch024_p007.png"  # Имя файла для старта
     
-    git_operations_for_directory(TARGET_DIRECTORY, START_FROM_FILE)
+    git_operations_for_directory(REPO_ROOT, TARGET_DIR, START_FROM_FILE)
