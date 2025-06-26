@@ -64,7 +64,7 @@ def git_commit_chapters(repo_root, sorted_dir, start_from=None):
 if __name__ == "__main__":
     # Конфигурация
     REPO_ROOT = "/home/den/MangaOcen/TheShiunjiFamilyChildren"  # Указывает корневую папку Git-репозитория, куда будут заливаться файлы.
-    SORTED_DIR = "/home/den/MangaOcen/TheShiunjiFamilyChildren"  # Папка с главами (теперь в корне)
+    SORTED_DIR = "/home/den/MangaOcen/TheShiunjiFamilyChildren"  # Папка с главами (должна быть в папке локального репозитория)
     START_FROM = "Chapter1"  # Начать с этой главы (None - с первой)
 
     # Проверяем существование директорий
