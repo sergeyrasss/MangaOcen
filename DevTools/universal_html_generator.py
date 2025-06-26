@@ -48,14 +48,11 @@ def generate_html_for_chapter(chapter_dir, chapters_list):
             pages.append(item)
     
     try:
-        # Сортируем страницы по извлечённому номеру
         pages.sort(key=extract_page_number)
-    except ValueError as e:
-        print(f"Ошибка сортировки страниц в главе {chapter_dir}: {e}")
-        # Если не удалось отсортировать, используем порядок файловой системы
+    except ValueError:
         pages.sort()
     
-    # Остальной код генерации HTML без изменений
+    # Генерируем HTML с измененной навигацией
     html = f'''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -63,28 +60,33 @@ def generate_html_for_chapter(chapter_dir, chapters_list):
     <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
     <title>{MANGA_TITLE} - {chapter_dir}</title>
     <style type="text/css">
-        body {{
+        body, div, img {{
             margin: 0;
             padding: 0;
+            border: 0;
+        }}
+        body {{
             background-color: #000;
+            width: 100%;
             -webkit-text-size-adjust: none;
             overflow-x: hidden;
-            width: 100%;
+            position: absolute;
         }}
         .page-container {{
             width: 100%;
-            margin: 0 auto;
+            min-width: 100%;
+            margin: 0;
             padding: 0;
             overflow: hidden;
             display: block;
         }}
         .page-image {{
             width: 100%;
+            min-width: 100%;
             height: auto;
             display: block;
-            margin: 0;
-            padding: 0;
-            border: none;
+            margin-left: -1px;
+            padding-right: 1px;
         }}
         .nav-container {{
             width: 100%;
@@ -100,7 +102,6 @@ def generate_html_for_chapter(chapter_dir, chapters_list):
         select {{
             width: 100%;
             height: 40px;
-            margin-bottom: 10px;
             font-size: 16px;
             background-color: #333;
             color: #FFF;
@@ -108,36 +109,31 @@ def generate_html_for_chapter(chapter_dir, chapters_list):
             -webkit-appearance: menulist;
             border-radius: 4px;
         }}
-        a.button {{
-            display: block;
-            width: 100%;
-            height: 40px;
-            line-height: 40px;
-            font-size: 16px;
-            background-color: #FF6B00;
-            color: #FFF;
-            text-decoration: none;
-            font-weight: bold;
-            text-align: center;
-            border-radius: 20px;
-            border: none;
-        }}
     </style>
 </head>
 <body>
 '''
     # Добавляем страницы
     for page in pages:
-        html += f'<div class="page-container"><img class="page-image" src="../{chapter_dir}/{page}" alt="" /></div>\n'
-
-    # Навигационная панель
+        html += f'''
+    <div class="page-container">
+        <div style="width:100%;overflow:hidden;">
+            <img class="page-image" src="../{chapter_dir}/{page}" alt="" />
+        </div>
+    </div>
+        '''
+    
+    # Навигационная панель с измененным списком глав
     html += f'''
     <div class="nav-container">
         <div class="nav-inner">
-            <select onchange="window.location.href=this.value;">
-                <option value="">Выберите главу...</option>
+            <select onchange="if(this.value) window.location.href=this.value;">
+                <option value="">-- Меню навигации --</option>
+                <option value="../../index.html">≡ НА ГЛАВНУЮ ≡</option>
+                <option value="">----------------</option>
 '''
     
+    # Добавляем опции для выбора главы
     for chapter in chapters_list:
         c_num = get_chapter_number(chapter)
         selected = ' selected="selected"' if c_num == chapter_num else ''
@@ -145,7 +141,6 @@ def generate_html_for_chapter(chapter_dir, chapters_list):
     
     html += '''
             </select>
-            <a href="../../index.html" class="button">НА ГЛАВНУЮ</a>
         </div>
     </div>
 </body>

@@ -37,11 +37,10 @@ def get_sorted_chapters():
     return sorted(chapters, key=get_chapter_number)
 
 def generate_html_for_chapter(chapter_dir, chapters_list):
-    """Генерируем HTML для одной главы"""
+    """Генерируем HTML с исправлением для iOS 3"""
     chapter_path = os.path.join(BASE_DIR, chapter_dir)
     chapter_num = get_chapter_number(chapter_dir)
     
-    # Получаем и сортируем страницы
     pages = []
     for item in os.listdir(chapter_path):
         if item.lower().endswith(('.png', '.jpg', '.jpeg')):
@@ -52,68 +51,75 @@ def generate_html_for_chapter(chapter_dir, chapters_list):
     except ValueError:
         pages.sort()
     
-    # Генерируем HTML с исправленным CSS
+    # Специальный CSS для старых iOS
     html = f'''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
     <title>{MANGA_TITLE} - {chapter_dir}</title>
     <style type="text/css">
-        html, body {{
+        /* Reset для старых iOS */
+        body, div, img {{
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            background-color: #000 !important;
+            border: 0;
         }}
         body {{
+            background-color: #000;
+            width: 100%;
             -webkit-text-size-adjust: none;
-            touch-action: pan-y;
-            position: relative;
+            overflow-x: hidden;
+            position: absolute;
         }}
         .page-container {{
-            width: 100vw;
+            width: 100%;
+            min-width: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
             display: block;
-            box-sizing: border-box;
         }}
         .page-image {{
             width: 100%;
+            min-width: 100%;
             height: auto;
             display: block;
-            margin: 0 auto;
-            padding: 0;
-            object-fit: cover;
-            image-rendering: -webkit-optimize-contrast;
+            margin-left: -1px; /* Фикс для iOS 3 */
+            padding-right: 1px; /* Фикс для iOS 3 */
         }}
+        /* Остальные стили */
         .nav-container {{
             width: 100%;
             background-color: #000;
             padding: 15px 10px;
             text-align: center;
             border-top: 1px solid #333;
-            position: sticky;
-            bottom: 0;
-            z-index: 100;
         }}
-        /* Остальные стили без изменений */
     </style>
+    <!--[if IE]>
+    <style>
+        .page-image {{
+            width: 100%;
+            margin-left: 0;
+            padding-right: 0;
+        }}
+    </style>
+    <![endif]-->
 </head>
-<body>
+<body style="margin:0;padding:0;">
 '''
-    # Добавляем страницы с новым контейнером
+    # Добавляем страницы с дополнительным контейнером
     for page in pages:
         html += f'''
     <div class="page-container">
-        <img class="page-image" src="../{chapter_dir}/{page}" alt="" />
+        <div style="width:100%;overflow:hidden;">
+            <img class="page-image" src="../{chapter_dir}/{page}" alt="" />
+        </div>
     </div>
         '''
     
-    # Остальной код без изменений
+    # Навигационная панель
     html += f'''
     <div class="nav-container">
         <div class="nav-inner">
