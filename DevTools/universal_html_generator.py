@@ -1,92 +1,92 @@
 import os
 from pathlib import Path
 
-# ====================== КОНФИГУРАЦИЯ ======================
-MANGA_TITLE = "The Shiunji Family Children"
-BASE_DIR = "/home/den/MangaOcen/TheShiunjiFamilyChildren"
-OUTPUT_DIR = os.path.join(BASE_DIR, "html_chapters")
-CHAPTER_PREFIX = "Chapter"
+# Конфигурация
+MANGA_TITLE = "TheShiunjiFamilyChildren"
+CHAPTERS_DIR = "/home/den/MangaOcen/TheShiunjiFamilyChildren"
+OUTPUT_DIR = "/home/den/MangaOcen/TheShiunjiFamilyChildren/html"
+TEMPLATE_FILE = "template.html"
 
-# ====================== КОНЕЦ КОНФИГУРАЦИИ ======================
-
+# Создаем директорию для HTML-файлов
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def get_chapter_number(chapter_dir):
-    """Извлекаем номер главы из имени директории"""
-    # Более надёжный способ извлечения чисел
-    numbers = ''.join(filter(str.isdigit, chapter_dir))
-    return int(numbers) if numbers else 0
+# Получаем и сортируем список глав
+chapters = sorted(
+    [d for d in os.listdir(CHAPTERS_DIR) if d.startswith("Chapter")],
+    key=lambda x: float(x[7:].replace("_", ".")) if x[7:].replace("_", "").isdigit() else 0
+)
 
-def extract_page_number(filename):
-    """Извлекаем номер страницы из имени файла"""
-    # Ищем последовательности цифр в имени файла
-    numbers = ''.join(filter(str.isdigit, os.path.splitext(filename)[0]))
-    return int(numbers) if numbers else 0
+# Генерируем HTML для выпадающего списка
+options_html = []
+for chapter in chapters:
+    chapter_num = chapter[7:]
+    display_num = chapter_num.replace("_", ".")
+    option_value = f"chapter_{chapter_num.lower().replace('_', '.')}.html"
+    options_html.append(f'<option value="{option_value}">Глава {display_num}</option>')
 
-def get_sorted_chapters():
-    """Получаем отсортированный список глав"""
-    chapters = []
-    for item in os.listdir(BASE_DIR):
-        if item.startswith(CHAPTER_PREFIX):
-            try:
-                # Проверяем, что можем извлечь номер главы
-                get_chapter_number(item)
-                chapters.append(item)
-            except ValueError:
-                continue
-    return sorted(chapters, key=get_chapter_number)
+options_html = "\n".join(options_html)
 
-def generate_html_for_chapter(chapter_dir, chapters_list):
-    """Генерируем HTML для одной главы"""
-    chapter_path = os.path.join(BASE_DIR, chapter_dir)
-    chapter_num = get_chapter_number(chapter_dir)
-    
+# Функция создания HTML-файла для главы
+def create_chapter_html(chapter_dir, chapter_num):
     # Получаем и сортируем страницы
-    pages = []
-    for item in os.listdir(chapter_path):
-        if item.lower().endswith(('.png', '.jpg', '.jpeg')):
-            pages.append(item)
+    pages = sorted(
+        [f for f in os.listdir(os.path.join(CHAPTERS_DIR, chapter_dir)) 
+         if f.lower().endswith(('.png', '.jpg', '.jpeg'))],
+        key=lambda x: int(''.join(filter(str.isdigit, x)) or 0)
+    )
     
-    try:
-        pages.sort(key=extract_page_number)
-    except ValueError:
-        pages.sort()
+    # Генерируем HTML для страниц
+    pages_html = []
+    for page in pages:
+        img_path = f"../{chapter_dir}/{page}"
+        alt_text = f"Страница {''.join(filter(str.isdigit, page))}"
+        pages_html.append(f'<div class="page-container"><img class="page-image" src="{img_path}" alt="{alt_text}" /></div>')
     
-    # Генерируем HTML с измененной навигацией
-    html = f'''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    pages_html = "\n".join(pages_html)
+    
+    # Читаем шаблон и заменяем плейсхолдеры
+    with open(TEMPLATE_FILE, 'r') as f:
+        template = f.read()
+    
+    html = template.replace("<!-- PAGES_PLACEHOLDER -->", pages_html)
+    html = html.replace("<!-- OPTIONS_PLACEHOLDER -->", options_html)
+    
+    # Устанавливаем selected для текущей главы
+    current_chapter_value = f"chapter_{chapter_num.lower().replace('_', '.')}.html"
+    html = html.replace(f'value="{current_chapter_value}"', f'value="{current_chapter_value}" selected="selected"')
+    
+    # Сохраняем HTML-файл
+    output_filename = os.path.join(OUTPUT_DIR, f"chapter_{chapter_num.lower().replace('_', '.')}.html")
+    with open(output_filename, 'w') as f:
+        f.write(html)
+
+# Создаем шаблон, если его нет
+if not os.path.exists(TEMPLATE_FILE):
+    with open(TEMPLATE_FILE, 'w') as f:
+        f.write(f"""<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-    <title>{MANGA_TITLE} - {chapter_dir}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{MANGA_TITLE} - Глава CHAPTER_NUM</title>
     <style type="text/css">
-        body, div, img {{
+        body {{
             margin: 0;
             padding: 0;
-            border: 0;
-        }}
-        body {{
             background-color: #000;
-            width: 100%;
             -webkit-text-size-adjust: none;
-            overflow-x: hidden;
-            position: absolute;
         }}
         .page-container {{
             width: 100%;
-            min-width: 100%;
-            margin: 0;
+            text-align: center;
+            margin: 0 auto;
             padding: 0;
-            overflow: hidden;
-            display: block;
         }}
         .page-image {{
-            width: 100%;
-            min-width: 100%;
+            max-width: 100%;
             height: auto;
             display: block;
-            margin-left: -1px;
-            padding-right: 1px;
+            margin: 0 auto;
         }}
         .nav-container {{
             width: 100%;
@@ -102,69 +102,44 @@ def generate_html_for_chapter(chapter_dir, chapters_list):
         select {{
             width: 100%;
             height: 40px;
+            margin-bottom: 10px;
             font-size: 16px;
             background-color: #333;
             color: #FFF;
             border: 1px solid #666;
             -webkit-appearance: menulist;
-            border-radius: 4px;
+        }}
+        a.button {{
+            display: block;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            background-color: #FF6B00;
+            color: #FFF;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
         }}
     </style>
 </head>
 <body>
-'''
-    # Добавляем страницы
-    for page in pages:
-        html += f'''
-    <div class="page-container">
-        <div style="width:100%;overflow:hidden;">
-            <img class="page-image" src="../{chapter_dir}/{page}" alt="" />
-        </div>
-    </div>
-        '''
-    
-    # Навигационная панель с измененным списком глав
-    html += f'''
+    <!-- PAGES_PLACEHOLDER -->
     <div class="nav-container">
         <div class="nav-inner">
-            <select onchange="if(this.value) window.location.href=this.value;">
-                <option value="">-- Меню навигации --</option>
-                <option value="../../index.html">≡ НА ГЛАВНУЮ ≡</option>
-                <option value="">----------------</option>
-'''
-    
-    # Добавляем опции для выбора главы
-    for chapter in chapters_list:
-        c_num = get_chapter_number(chapter)
-        selected = ' selected="selected"' if c_num == chapter_num else ''
-        html += f'                <option value="chapter_{c_num}.html"{selected}>{chapter}</option>\n'
-    
-    html += '''
+            <select onchange="window.location.href=this.value;">
+                <option value="">Выберите главу...</option>
+                <!-- OPTIONS_PLACEHOLDER -->
             </select>
+            <a href="../../index.html" class="button">НА ГЛАВНУЮ</a>
         </div>
     </div>
 </body>
-</html>
-'''
-    
-    output_file = os.path.join(OUTPUT_DIR, f"chapter_{chapter_num}.html")
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write(html)
-    
-    return output_file
+</html>""")
 
-def main():
-    chapters = get_sorted_chapters()
-    print(f"Найдено глав: {len(chapters)}")
-    
-    for chapter in chapters:
-        try:
-            output_file = generate_html_for_chapter(chapter, chapters)
-            print(f"Сгенерирован: {output_file}")
-        except Exception as e:
-            print(f"Ошибка при обработке главы {chapter}: {e}")
-    
-    print("Генерация завершена!")
+# Генерируем HTML для всех глав
+for chapter in chapters:
+    chapter_num = chapter[7:]
+    create_chapter_html(chapter, chapter_num)
 
-if __name__ == "__main__":
-    main()
+print(f"Создано {len(chapters)} HTML-файлов в {OUTPUT_DIR}")
