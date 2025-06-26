@@ -51,7 +51,7 @@ def process_chapter(driver, start_url, max_pages=1000):
             temp_file = "temp_screen.png"
             driver.save_screenshot(temp_file)
             img = Image.open(temp_file)
-            cropped_img = img.crop((131, 0, img.width - 796, img.height - 54))
+            cropped_img = img.crop((131, 0, img.width - 793, img.height - 54))
             cropped_img.save(output_file)
             os.remove(temp_file)
             print(f"Сохранено: {output_file}")
