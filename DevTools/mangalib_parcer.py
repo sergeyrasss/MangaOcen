@@ -148,7 +148,7 @@ def get_page_number(url):
     return "1"
 
 def main():
-    start_url = "https://mangalib.me/ru/12803--isekai-ojisan/read/v14/c66.5?p=10"
+    start_url = "https://mangalib.me/ru/12803--isekai-ojisan/read/v11/c54?p=33"
     max_attempts = 3  # Максимальное количество попыток при одинаковом URL
     
     driver = setup_driver()
