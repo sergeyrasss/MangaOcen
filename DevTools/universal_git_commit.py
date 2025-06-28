@@ -12,8 +12,8 @@ def git_commit_chapters(repo_root, sorted_dir, start_from=None):
 
     # Получаем и сортируем список папок с главами
     chapters = sorted(
-        [d for d in os.listdir(sorted_dir) if d.startswith("Chapter")],
-        key=lambda x: int(x.replace("Chapter", ""))
+    [d for d in os.listdir(sorted_dir) if d.startswith("Chapter")],
+    key=lambda x: float(x.replace("Chapter", ""))  # <- Заменили int на float
     )
 
     if not chapters:
@@ -63,8 +63,8 @@ def git_commit_chapters(repo_root, sorted_dir, start_from=None):
 
 if __name__ == "__main__":
     # Конфигурация
-    REPO_ROOT = "/home/den/MangaOcen/TheShiunjiFamilyChildren"  # Указывает корневую папку Git-репозитория, куда будут заливаться файлы.
-    SORTED_DIR = "/home/den/MangaOcen/TheShiunjiFamilyChildren"  # Папка с главами (должна быть в папке локального репозитория)
+    REPO_ROOT = "/home/den/MangaOcen/IsekaiOjisan"  # Указывает корневую папку Git-репозитория, куда будут заливаться файлы.
+    SORTED_DIR = "/home/den/MangaOcen/IsekaiOjisan"  # Папка с главами (должна быть в папке локального репозитория)
     START_FROM = "Chapter1"  # Начать с этой главы (None - с первой)
 
     # Проверяем существование директорий
