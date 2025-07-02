@@ -2,9 +2,9 @@ import os
 from pathlib import Path
 
 # Конфигурация
-MANGA_TITLE = "Onepunchman"
-CHAPTERS_DIR = "/home/den/MangaOcen/Onepunchman"
-OUTPUT_DIR = "/home/den/MangaOcen/Onepunchman/html"
+MANGA_TITLE = "The five wedded brides"
+CHAPTERS_DIR = "/home/den/MangaOcen/Thefiveweddedbrides"
+OUTPUT_DIR = "/home/den/MangaOcen/Thefiveweddedbrides/html"
 TEMPLATE_FILE = "template.html"
 
 # Создаем директорию для HTML-файлов

@@ -65,7 +65,7 @@ if __name__ == "__main__":
     # Конфигурация
     REPO_ROOT = "/home/den/MangaOcen/Thefiveweddedbrides"  # Указывает корневую папку Git-репозитория, куда будут заливаться файлы.
     SORTED_DIR = "/home/den/MangaOcen/Thefiveweddedbrides"  # Папка с главами (должна быть в папке локального репозитория)
-    START_FROM = "Chapter82"  # Начать с этой главы (None - с первой)
+    START_FROM = "Chapter1"  # Начать с этой главы (None - с первой)
 
     # Проверяем существование директорий
     if not os.path.isdir(REPO_ROOT):
