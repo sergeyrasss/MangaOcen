@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>MangaVerse - Главная</title>
+    <title>Manga Ocean - Главная</title>
     <style>
         * {
             margin: 0;
@@ -11,51 +11,54 @@
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
         }
         
         body {
-            background-color: #000;
+            background-color: #0a192f;
             color: white;
             -webkit-text-size-adjust: 100%;
+            background-image: radial-gradient(circle at 75% 25%, #112240 0%, #0a192f 100%);
         }
         
         .header {
-            background-color: #FF6B00;
-            padding: 20px 0;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            padding: 25px 0;
             text-align: center;
-            -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
         .header h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: white;
-            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
         }
         
         .content {
-            margin-top: 80px;
-            padding: 20px;
+            margin-top: 100px;
+            padding: 30px 20px;
             display: -webkit-box;
             display: -moz-box;
             display: -ms-flexbox;
             display: -webkit-flex;
             display: flex;
-            -webkit-flex-direction: column;
-            -moz-flex-direction: column;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            -webkit-align-items: center;
-            -moz-align-items: center;
-            -ms-align-items: center;
-            align-items: center;
-            gap: 30px;
+            -webkit-flex-wrap: wrap;
+            -moz-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-justify-content: center;
+            -moz-justify-content: center;
+            -ms-justify-content: center;
+            justify-content: center;
+            gap: 40px;
         }
         
         .manga-item {
@@ -73,54 +76,149 @@
             -ms-align-items: center;
             align-items: center;
             gap: 20px;
+            width: 220px;
+            transition: all 0.3s ease;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+        }
+        
+        .manga-item:hover {
+            transform: translateY(-5px);
+            -webkit-transform: translateY(-5px);
+            -moz-transform: translateY(-5px);
+        }
+        
+        .manga-cover-container {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+            -moz-perspective: 1000px;
         }
         
         .manga-cover {
-            width: 200px;
-            height: 300px;
-            border-radius: 15px;
-            -webkit-border-radius: 15px;
-            -moz-border-radius: 15px;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
             -o-object-fit: cover;
             object-fit: cover;
-            -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+        }
+        
+        .manga-cover-container:hover .manga-cover {
+            transform: scale(1.03);
+            -webkit-transform: scale(1.03);
+            -moz-transform: scale(1.03);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+            -webkit-box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
         }
         
         .read-button {
             display: inline-block;
-            padding: 15px 40px;
-            background-color: #FF6B00;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
             color: white;
             text-decoration: none;
             border-radius: 30px;
             -webkit-border-radius: 30px;
             -moz-border-radius: 30px;
             font-weight: bold;
-            font-size: 18px;
-            -webkit-transition: background-color 0.3s;
-            -moz-transition: background-color 0.3s;
-            -o-transition: background-color 0.3s;
-            transition: background-color 0.3s;
+            font-size: 16px;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
             border: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 180, 219, 0.3);
+            -webkit-box-shadow: 0 4px 15px rgba(0, 180, 219, 0.3);
+        }
+        
+        .read-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
         }
         
         .read-button:hover {
-            background-color: #E55C00;
+            background: linear-gradient(135deg, #0083b0, #00b4db);
+            box-shadow: 0 6px 20px rgba(0, 180, 219, 0.5);
+            -webkit-box-shadow: 0 6px 20px rgba(0, 180, 219, 0.5);
         }
         
-        @media (max-width: 480px) {
-            .manga-cover {
-                width: 180px;
-                height: 270px;
+        .read-button:hover:before {
+            left: 100%;
+        }
+        
+        .manga-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                gap: 30px;
+            }
+            
+            .manga-item {
+                width: 160px;
+            }
+            
+            .manga-cover-container {
+                width: 150px;
+                height: 225px;
             }
             
             .read-button {
-                padding: 12px 35px;
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+            
+            .manga-title {
                 font-size: 16px;
             }
         }
         
+        @media (max-width: 480px) {
+            .content {
+                gap: 25px;
+            }
+            
+            .manga-item {
+                width: 140px;
+            }
+            
+            .manga-cover-container {
+                width: 130px;
+                height: 195px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+        
+        /* Fallback for older browsers */
         .no-flexbox .content {
             display: block;
             text-align: center;
@@ -128,7 +226,22 @@
         
         .no-flexbox .manga-item {
             display: inline-block;
-            margin-bottom: 40px;
+            margin: 0 15px 40px;
+            vertical-align: top;
+        }
+        
+        /* IE10+ fallback */
+        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+            .content {
+                display: block;
+                text-align: center;
+            }
+            
+            .manga-item {
+                display: inline-block;
+                margin: 0 15px 40px;
+                vertical-align: top;
+            }
         }
     </style>
     <!--[if lt IE 10]>
@@ -139,11 +252,19 @@
         }
         .manga-item {
             display: inline-block;
-            margin-bottom: 40px;
+            margin: 0 15px 40px;
+            vertical-align: top;
+        }
+        .read-button {
+            background: #0083b0;
+        }
+        .read-button:hover {
+            background: #00b4db;
         }
     </style>
     <![endif]-->
     <script>
+        // Feature detection for flexbox
         if (!('flex' in document.documentElement.style)) {
             document.documentElement.className += ' no-flexbox';
         }
@@ -151,50 +272,65 @@
 </head>
 <body>
     <div class="header">
-        <h1>MangaVerse</h1>
+        <h1>Manga Ocean</h1>
     </div>
     
     <div class="content">
         <div class="manga-item">
-            <img class="manga-cover" 
-                 src="/MangaOcen/GrandBlue/sorted_manga/Chapter 1/grand_blue_ch1_p1.jpg" 
-                 alt="Grand Blue Cover">
+            <div class="manga-cover-container">
+                <img class="manga-cover" 
+                     src="/MangaOcen/GrandBlue/sorted_manga/Chapter 1/grand_blue_ch1_p1.jpg" 
+                     alt="Grand Blue Cover">
+            </div>
+            <div class="manga-title">Grand Blue</div>
             <a href="/MangaOcen/GrandBlue/chapters/chapter_1.html" 
                class="read-button" 
                target="_blank">ЧИТАТЬ</a>
         </div>
         
         <div class="manga-item">
-            <img class="manga-cover" 
-                 src="/MangaOcen/TheShiunjiFamilyChildren/Chapter1/title.jpg" 
-                 alt="The Shiunji Family Children Cover">
+            <div class="manga-cover-container">
+                <img class="manga-cover" 
+                     src="/MangaOcen/TheShiunjiFamilyChildren/Chapter1/title.jpg" 
+                     alt="The Shiunji Family Children Cover">
+            </div>
+            <div class="manga-title">Shiunji Family</div>
             <a href="/MangaOcen/TheShiunjiFamilyChildren/html/chapter_1.html" 
                class="read-button" 
                target="_blank">ЧИТАТЬ</a>
         </div>
         
         <div class="manga-item">
-            <img class="manga-cover" 
-                 src="/MangaOcen/IsekaiOjisan/Chapter1/title.jpg" 
-                 alt="Isekai Ojisan Cover">
+            <div class="manga-cover-container">
+                <img class="manga-cover" 
+                     src="/MangaOcen/IsekaiOjisan/Chapter1/title.jpg" 
+                     alt="Isekai Ojisan Cover">
+            </div>
+            <div class="manga-title">Isekai Ojisan</div>
             <a href="/MangaOcen/IsekaiOjisan/html/chapter_1.html" 
                class="read-button" 
                target="_blank">ЧИТАТЬ</a>
         </div>
         
         <div class="manga-item">
-            <img class="manga-cover" 
-                 src="/MangaOcen/Onepunchman/Chapter1/title.jpg" 
-                 alt="Onepunchman Cover">
+            <div class="manga-cover-container">
+                <img class="manga-cover" 
+                     src="/MangaOcen/Onepunchman/Chapter1/title.jpg" 
+                     alt="Onepunchman Cover">
+            </div>
+            <div class="manga-title">One Punch Man</div>
             <a href="/MangaOcen/Onepunchman/html/chapter_1.html" 
                class="read-button" 
                target="_blank">ЧИТАТЬ</a>
         </div>
         
         <div class="manga-item">
-            <img class="manga-cover" 
-                 src="/MangaOcen/Thefiveweddedbrides/Chapter1/Page1.jpg" 
-                 alt="The five wedded brides">
+            <div class="manga-cover-container">
+                <img class="manga-cover" 
+                     src="/MangaOcen/Thefiveweddedbrides/Chapter1/Page1.jpg" 
+                     alt="The five wedded brides">
+            </div>
+            <div class="manga-title">Five Wedded Brides</div>
             <a href="/MangaOcen/Thefiveweddedbrides/html/chapter_1.html" 
                class="read-button" 
                target="_blank">ЧИТАТЬ</a>
