@@ -63,9 +63,9 @@ def git_commit_chapters(repo_root, sorted_dir, start_from=None):
 
 if __name__ == "__main__":
     # Конфигурация
-    REPO_ROOT = "/home/den/MangaOcen/Thefiveweddedbrides"  # Указывает корневую папку Git-репозитория, куда будут заливаться файлы.
-    SORTED_DIR = "/home/den/MangaOcen/Thefiveweddedbrides"  # Папка с главами (должна быть в папке локального репозитория)
-    START_FROM = "Chapter1"  # Начать с этой главы (None - с первой)
+    REPO_ROOT = "/home/den/MangaOcen/ACoupleofCuckoo's"  # Указывает корневую папку Git-репозитория, куда будут заливаться файлы.
+    SORTED_DIR = "/home/den/MangaOcen/ACoupleofCuckoo's"  # Папка с главами (должна быть в папке локального репозитория)
+    START_FROM = "Chapter62"  # Начать с этой главы (None - с первой)
 
     # Проверяем существование директорий
     if not os.path.isdir(REPO_ROOT):

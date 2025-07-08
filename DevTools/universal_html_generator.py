@@ -2,9 +2,9 @@ import os
 from pathlib import Path
 
 # Конфигурация
-MANGA_TITLE = "The five wedded brides"
-CHAPTERS_DIR = "/home/den/MangaOcen/Thefiveweddedbrides"
-OUTPUT_DIR = "/home/den/MangaOcen/Thefiveweddedbrides/html"
+MANGA_TITLE = "A Couple of Cuckoo's"
+CHAPTERS_DIR = "/home/den/MangaOcen/ACoupleofCuckoo's"
+OUTPUT_DIR = "/home/den/MangaOcen/ACoupleofCuckoo's/html"
 TEMPLATE_FILE = "template.html"
 
 # Создаем директорию для HTML-файлов
@@ -108,6 +108,8 @@ if not os.path.exists(TEMPLATE_FILE):
             color: #FFF;
             border: 1px solid #666;
             -webkit-appearance: menulist;
+            border-radius: 20px;
+            padding: 0 15px;
         }}
         a.button {{
             display: block;
@@ -115,11 +117,19 @@ if not os.path.exists(TEMPLATE_FILE):
             height: 40px;
             line-height: 40px;
             font-size: 16px;
-            background-color: #FF6B00;
+            background: #00b4db; /* Голубой цвет */
             color: #FFF;
             text-decoration: none;
             font-weight: bold;
             text-align: center;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+            -webkit-tap-highlight-color: transparent;
+        }}
+        a.button:active {{
+            background: #0083b0; /* Темнее при нажатии */
         }}
     </style>
 </head>
@@ -131,7 +141,7 @@ if not os.path.exists(TEMPLATE_FILE):
                 <option value="">Выберите главу...</option>
                 <!-- OPTIONS_PLACEHOLDER -->
             </select>
-            <a href="../../index.html" class="button">НА ГЛАВНУЮ</a>
+            <a href="/MangaOcen/index.html" class="button">НА ГЛАВНУЮ</a>
         </div>
     </div>
 </body>
